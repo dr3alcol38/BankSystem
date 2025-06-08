@@ -1,0 +1,7 @@
+﻿  BankSystemMain.cpp
+  UserProfile.cpp
+C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\UserProfile.cpp(82,80): warning C4244: 'argument': conversion from 'uint64_t' to 'const unsigned int', possible loss of data
+C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\UserProfile.cpp(82,149): warning C4244: 'argument': conversion from 'uint64_t' to 'const unsigned int', possible loss of data
+C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\UserProfile.cpp(82,203): warning C4244: 'argument': conversion from 'uint64_t' to 'const unsigned int', possible loss of data
+  Generating Code...
+  BankSystem.vcxproj -> C:\Users\Cole\Downloads\C++(Class)\BankSystem\Debug\BankSystem.exe
