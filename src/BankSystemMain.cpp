@@ -20,34 +20,36 @@ void BankProgramme();
 
 int main()
 {
-    std::string path = BankFileSystem::GetExeFolder() + "test.bankData";
+    std::string path = FileSystem::GetExeFolder() + "test.bankData";
 
     {
-        //BankProgramme();
+        BankProgramme();
     }
 
-    BankFile file(path);
-    if (!file.FileExists()) 
-    { 
-        file.CreateFile(FileType::userProfileData);
-        file.AddDataToFile(*new std::string(4, 'P'));
-        file.AddDataToFile(*new std::string(3, 'L'));
-        char h = 'h';
-        bool b = false;
-        file.AddDataToFile(h);
-        file.AddDataToFile(b);
-    }
-    else
-    {
-        HelperFuncs::LogLine(file.ReadStringFromFile());
-        HelperFuncs::LogLine(std::to_string(file.ReadUint64_tFromFile()));
-        HelperFuncs::LogLine(file.ReadStringFromFile());
-        HelperFuncs::LogLine(file.ReadStringFromFile());
-        char h1 = file.ReadCharFromFile();
-        std::string s = "" + h1;
-        HelperFuncs::LogLine(s);
-        HelperFuncs::LogLine(std::to_string(file.ReadBoolFromFile()));
-    }
+    //BankFile file(path);
+    //if (!file.FileExists()) 
+    //{ 
+    //    file.CreateFile(FileType::userProfileData);
+    //}
+    //else
+    //{
+    //    file.ClearFileData(FileType::userProfileData);
+    //}
+
+    //std::string k1 = "The first string";
+    //std::string k2 = "The second string";
+
+    //file.AddDataToFile(k1);
+    //file.AddDataToFile(k2);
+    //file.AddDataToFile(k1);
+    //file.SaveFile();
+
+    //HelperFuncs::LogLine(file.ReadStringFromFile());
+    //HelperFuncs::LogLine(std::to_string(file.ReadUint64_tFromFile()));
+    //HelperFuncs::LogLine(file.ReadStringFromFile());
+    //HelperFuncs::LogLine(file.ReadStringFromFile());
+    //HelperFuncs::LogLine(file.ReadStringFromFile());
+    //file.CloseFile();
 
     return 0;
 }

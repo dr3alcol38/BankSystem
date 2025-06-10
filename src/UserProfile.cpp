@@ -89,20 +89,23 @@ void UserProfile::SaveBankProfileData()
 {
 	HelperFuncs::LogLine("Saving user profile...");
 
+	std::string fileType = FileSystem::FileTypeToString(FileType::userProfileData);
+	uint64_t fileVersion = 0;
+
 	BankFile file(_filePath);
-	if (!file.FileExists()) { file.CreateFile(FileType::userProfileData); }
+	if (!file.FileExists()) { file.CreateFile(); }
 	else
 	{
-		file.ClearFileData(FileType::userProfileData);
+		//read the previous file type and data
+		fileType = file.ReadStringFromFile();
+		fileType = fileType == "" ? FileSystem::FileTypeToString(FileType::userProfileData) : fileType;
+		fileVersion = file.ReadUint64_tFromFile();
 	}
 
-	std::string fileType = file.ReadStringFromFile();
-	uint64_t fileVersion = file.ReadUint64_tFromFile();
-
-	if (fileType != BankFileSystem::FileTypeToString(FileType::userProfileData))
+	if (fileType != FileSystem::FileTypeToString(FileType::userProfileData))
 	{
 		HelperFuncs::Log("File Mismatch: ");
-		HelperFuncs::LogLine(fileType + " is not accepted for " + BankFileSystem::FileTypeToString(FileType::userProfileData));
+		HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::userProfileData));
 		return;
 	}
 
@@ -113,10 +116,20 @@ void UserProfile::SaveBankProfileData()
 		break;
 
 	case 0:
+		//clear the old data
+		file.ClearFileData();
+
+		//add the file type and version
+		file.AddDataToFile(fileType);
+		file.AddDataToFile(fileVersion);
+
+		//save the file based on it's version
 		SaveBankProfileData_Version_0(file);
 		break;
 	}
 
+	file.SaveFile();
+	
 	HelperFuncs::LogLine("Saving complete");
 }
 
@@ -146,10 +159,10 @@ void UserProfile::LoadBankProfileData()
 	std::string fileType = file.ReadStringFromFile(); //to skip the file title
 	uint64_t fileVersion = file.ReadUint64_tFromFile(); //to skip the file version
 
-	if (fileType != BankFileSystem::FileTypeToString(FileType::userProfileData))
+	if (fileType != FileSystem::FileTypeToString(FileType::userProfileData))
 	{
 		HelperFuncs::Log("File Mismatch: ");
-		HelperFuncs::LogLine(fileType + " is not accepted for " + BankFileSystem::FileTypeToString(FileType::userProfileData));
+		HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::userProfileData));
 		return;
 	}
 
@@ -185,7 +198,10 @@ void UserProfile::LoadBankProfileData_Version_0(BankFile & file)
 	//add the accounts with their pre-loaded data(setting thier user profile data and giving them the path to get thier data from).
 	for (std::string const& filePath : _accountsDataFileNames)
 	{
-		_bankAccounts.emplace_back(new BankAccount(this, filePath));
+		if (FileSystem::FileExists(filePath)) 
+		{
+			_bankAccounts.emplace_back(new BankAccount(this, filePath));
+		}
 	}
 }
 

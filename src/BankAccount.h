@@ -23,6 +23,7 @@ class BankAccount
 		void Deposit(double const& depositAmount);
 		void Withdraw(double const& withdrawAmount);
 		double GetBalance() const;
+		std::string GetBalanceToString() const;
 		void PrintBalance() const;
 		uint64_t GetAccountID() const;
 		void UpdateTransactionLog(std::string const& log);

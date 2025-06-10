@@ -143,6 +143,7 @@
     <ClCompile Include="src\BankSystemMain.cpp" />
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\HelperFuncs.cpp" />
+    <ClCompile Include="src\RequestAndResponseManager.cpp" />
     <ClCompile Include="src\SavingsAccount.cpp" />
     <ClCompile Include="src\UserProfile.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="src\BankAccount.h" />
     <ClInclude Include="src\FileSystem.h" />
     <ClInclude Include="src\HelperFuncs.h" />
+    <ClInclude Include="src\RequestAndResponseManager.h" />
     <ClInclude Include="src\SavingsAccount.h" />
     <ClInclude Include="src\UserProfile.h" />
   </ItemGroup>

@@ -11,6 +11,7 @@
 BankAccount::BankAccount(UserProfile* const& userProfile, std::string const& filePath) : _userProfile(userProfile), _filePath(filePath)
 {
 	LoadBankAccountData();
+	if (_userProfile->GetBankAccountByID(_accountID) != nullptr) { delete this; }
 }
 
 BankAccount::BankAccount(UserProfile* const& userProfile, uint64_t const& accountID, double const& initialBalance, std::string const& filePath) : _userProfile(userProfile), _accountID(accountID), _accountBalance(initialBalance), _filePath(filePath)
@@ -54,6 +55,11 @@ double BankAccount::GetBalance() const
 	return _accountBalance;
 }
 
+std::string BankAccount::GetBalanceToString() const
+{
+	return std::to_string(GetBalance());
+}
+
 void BankAccount::PrintBalance() const
 {
 	HelperFuncs::LogLine("AccountID: " + std::to_string(GetAccountID()) + ", Current balance $" + std::to_string(GetBalance()));
@@ -91,20 +97,23 @@ void BankAccount::SaveBankAccountData()
 {
 	HelperFuncs::LogLine("Saving bank account...");
 
+	std::string fileType = FileSystem::FileTypeToString(FileType::bankAccountData);
+	uint64_t fileVersion = 0;
+
 	BankFile file(_filePath);
-	if (!file.FileExists()) { file.CreateFile(FileType::bankAccountData); }
+	if (!file.FileExists()) { file.CreateFile(); }
 	else
 	{
-		file.ClearFileData(FileType::bankAccountData);
+		//read the previous file type and data
+		fileType = file.ReadStringFromFile();
+		fileType = fileType == "" ? FileSystem::FileTypeToString(FileType::bankAccountData) : fileType;
+		fileVersion = file.ReadUint64_tFromFile();
 	}
 
-	std::string fileType = file.ReadStringFromFile();
-	uint64_t fileVersion = file.ReadUint64_tFromFile();
-
-	if (fileType != BankFileSystem::FileTypeToString(FileType::bankAccountData)) 
+	if (fileType != FileSystem::FileTypeToString(FileType::bankAccountData)) 
 	{
 		HelperFuncs::Log("File Mismatch: ");
-		HelperFuncs::LogLine(fileType + " is not accepted for " + BankFileSystem::FileTypeToString(FileType::bankAccountData));
+		HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::bankAccountData));
 		return; 
 	}
 
@@ -115,9 +124,19 @@ void BankAccount::SaveBankAccountData()
 			break;
 
 		case 0:
+			//clear the old data
+			file.ClearFileData();
+
+			//add the file type and version
+			file.AddDataToFile(fileType);
+			file.AddDataToFile(fileVersion);
+
+			//save the file based on it's version
 			SaveBankAccountData_Version_0(file);
 			break;
 	}
+
+	file.SaveFile();
 
 	HelperFuncs::LogLine("Saving complete");
 }
@@ -146,10 +165,10 @@ void BankAccount::LoadBankAccountData()
 	std::string fileType = file.ReadStringFromFile(); //to skip the file title
 	uint64_t fileVersion = file.ReadUint64_tFromFile(); //to skip the file version
 
-	if (fileType != BankFileSystem::FileTypeToString(FileType::bankAccountData))
+	if (fileType != FileSystem::FileTypeToString(FileType::bankAccountData))
 	{
 		HelperFuncs::Log("File Mismatch: ");
-		HelperFuncs::LogLine(fileType + " is not accepted for " + BankFileSystem::FileTypeToString(FileType::bankAccountData));
+		HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::bankAccountData));
 		return;
 	}
 

@@ -12,4 +12,6 @@ src/BankAccount.h
 src/BankAccount.cpp
 src/UserProfile.h
 src/UserProfile.cpp
+src/RequestAndResponseManager.h
+src/RequestAndResponseManager.cpp
 )
