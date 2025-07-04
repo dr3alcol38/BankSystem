@@ -1,7 +1,0 @@
-﻿  Building Custom Rule C:/Users/Cole/Downloads/C++(Class)/BankSystem/CMakeLists.txt
-  BankSystemMain.cpp
-  BankAccount.cpp
-  UserProfile.cpp
-C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\UserProfile.cpp(65,28): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  BankSystem.vcxproj -> C:\Users\Cole\Downloads\C++(Class)\BankSystem\build\Debug\BankSystem.exe

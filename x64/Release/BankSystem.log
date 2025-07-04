@@ -1,0 +1,12 @@
+﻿  BankAccount.cpp
+  BankSystemMain.cpp
+  FileSystem.cpp
+  HelperFuncs.cpp
+  RequestAndResponseManager.cpp
+  SavingsAccount.cpp
+  UserProfile.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 625 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  BankSystem.vcxproj -> C:\Users\Cole\GitHub\BanakSystem\x64\Release\BankSystem.exe

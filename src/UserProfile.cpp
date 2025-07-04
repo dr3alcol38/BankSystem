@@ -1,6 +1,6 @@
 #include "UserProfile.h"
 
-#include <fstream>
+#include <direct.h>
 
 #include "HelperFuncs.h"
 #include "BankAccount.h"
@@ -8,7 +8,24 @@
 
 UserProfile::UserProfile(std::string const& firstName, std::string const& middleName, std::string const& lastName, uint64_t const& userID) : _firstName(firstName), _middleName(middleName), _lastName(lastName), _userID(userID)
 {
-	_filePath = "C:/Users/Cole/AppData/LocalLow/BankSystem/Saved Data/User Profile/" + _firstName + _lastName + std::to_string(_userID) + ".userprofile";
+	{
+		#ifdef _DEBUG
+			std::string hop = FileSystem::GetExeFolder() + "Bank System Saved Data";
+			if (_mkdir(hop.c_str()) != 0) { std::perror("Failed to create dir"); }
+			hop = FileSystem::GetExeFolder() + "Bank System Saved Data/User Profile";
+			if (_mkdir(hop.c_str()) != 0) { std::perror("Failed to create dir"); }
+			hop = FileSystem::GetExeFolder() + "Bank System Saved Data/Bank Accounts";
+			if (_mkdir(hop.c_str()) != 0) { std::perror("Failed to create dir"); }
+		#else
+			if (_mkdir("Bank System Saved Data") != 0) { std::perror("Failed to create dir"); }
+			if (_mkdir("Bank System Saved Data/User Profile") != 0) { std::perror("Failed to create dir"); }
+			if (_mkdir("Bank System Saved Data/Bank Accounts") != 0) { std::perror("Failed to create dir"); }
+
+		#endif // DEBUG
+	}
+
+	//_filePath = "C:/Users/Cole/AppData/LocalLow/BankSystem/Saved Data/User Profile/" + _firstName + _lastName + std::to_string(_userID) + ".userprofile";
+	_filePath = FileSystem::GetExeFolder() + "Bank System Saved Data/User Profile/" + _firstName + _lastName + std::to_string(_userID) + ".userprofile";
 
 	LoadBankProfileData();
 
@@ -45,7 +62,8 @@ void UserProfile::AddBankAccount(uint64_t const& accountID, double const& initia
 {
 	if (GetBankAccountByID(accountID) != nullptr) { return; }
 
-	std::string filePath = "C:/Users/Cole/AppData/LocalLow/BankSystem/Saved Data/Bank Accounts/" + GetLastName() + GetFirstName() + std::to_string(accountID) + ".bankaccountdata";
+	//std::string filePath = "C:/Users/Cole/AppData/LocalLow/BankSystem/Saved Data/Bank Accounts/" + GetLastName() + GetFirstName() + std::to_string(accountID) + ".bankaccountdata";
+	std::string filePath = FileSystem::GetExeFolder() + "Bank System Saved Data/Bank Accounts/" + GetLastName() + GetFirstName() + std::to_string(accountID) + ".bankaccountdata";
 
 	_bankAccounts.push_back(new BankAccount(this, accountID, initialBalance, filePath));
 	_accountsDataFileNames.push_back(filePath);
@@ -93,32 +111,39 @@ void UserProfile::SaveBankProfileData()
 	uint64_t fileVersion = 0;
 
 	BankFile file(_filePath);
+
 	if (!file.FileExists()) { file.CreateFile(); }
+	else if(file.FileExists() && file.GetFileSize() < 1)
+	{
+		std::string fileType = FileSystem::FileTypeToString(FileType::userProfileData);
+		uint64_t fileVersion = 0;
+	}
 	else
 	{
 		//read the previous file type and data
 		fileType = file.ReadStringFromFile();
 		fileType = fileType == "" ? FileSystem::FileTypeToString(FileType::userProfileData) : fileType;
-		fileVersion = file.ReadUint64_tFromFile();
-	}
 
-	if (fileType != FileSystem::FileTypeToString(FileType::userProfileData))
-	{
-		HelperFuncs::Log("File Mismatch: ");
-		HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::userProfileData));
-		return;
+		if (fileType != FileSystem::FileTypeToString(FileType::userProfileData))
+		{
+			HelperFuncs::Log("File Mismatch: ");
+			HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::userProfileData));
+			return;
+		}
+
+		fileVersion = file.ReadUint64_tFromFile();
+
+		//clear the old data
+		file.ClearFileData();
 	}
 
 	switch (fileVersion)
 	{
 	default:
-		HelperFuncs::Log("No file version found");
+		HelperFuncs::LogLine("No file version found");
 		break;
 
 	case 0:
-		//clear the old data
-		file.ClearFileData();
-
 		//add the file type and version
 		file.AddDataToFile(fileType);
 		file.AddDataToFile(fileVersion);
@@ -177,6 +202,8 @@ void UserProfile::LoadBankProfileData()
 		break;
 	}
 
+	file.CloseFile();
+
 	HelperFuncs::LogLine("Loading complete");
 }
 
@@ -190,9 +217,16 @@ void UserProfile::LoadBankProfileData_Version_0(BankFile & file)
 
 	_accountsDataFileNames.resize(fileNamesSize);
 
+	std::string filePath;
+
 	for (uint64_t i = 0; i < fileNamesSize; ++i)
 	{
-		_accountsDataFileNames[i] = file.ReadStringFromFile();
+		filePath = file.ReadStringFromFile();
+
+		if (FileSystem::FileExists(filePath)) 
+		{
+			_accountsDataFileNames[i] = filePath;
+		}
 	}
 
 	//add the accounts with their pre-loaded data(setting thier user profile data and giving them the path to get thier data from).

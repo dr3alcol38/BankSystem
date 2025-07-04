@@ -1,3 +1,3 @@
-C:/Users/Cole/Downloads/C++(Class)/BankSystem/build/CMakeFiles/BankSystem.dir
-C:/Users/Cole/Downloads/C++(Class)/BankSystem/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/Cole/Downloads/C++(Class)/BankSystem/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Cole/GitHub/BanakSystem/build/CMakeFiles/BankSystem.dir
+C:/Users/Cole/GitHub/BanakSystem/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Cole/GitHub/BanakSystem/build/CMakeFiles/ZERO_CHECK.dir

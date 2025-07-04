@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\build\CMakeFiles\ab675c1031ddf3d5f74ec223a7782c43\generate.stamp.rule">
+    <CustomBuild Include="C:\Users\Cole\GitHub\BanakSystem\build\CMakeFiles\e4a3f58d0ff6d3c58e2bc2f7d1861e4f\generate.stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{3F4C4C02-3BF2-359D-B18E-728FB19B2984}</UniqueIdentifier>
+      <UniqueIdentifier>{E926FB5A-0A27-38EB-948D-31EB43FE14ED}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

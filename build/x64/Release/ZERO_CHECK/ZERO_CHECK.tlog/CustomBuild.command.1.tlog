@@ -1,6 +1,6 @@
-^C:\USERS\COLE\DOWNLOADS\C++(CLASS)\BANKSYSTEM\BUILD\CMAKEFILES\AB675C1031DDF3D5F74EC223A7782C43\GENERATE.STAMP.RULE
+^C:\USERS\COLE\GITHUB\BANAKSYSTEM\BUILD\CMAKEFILES\E4A3F58D0FF6D3C58E2BC2F7D1861E4F\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Cole/Downloads/C++(Class)/BankSystem -BC:/Users/Cole/Downloads/C++(Class)/BankSystem/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Cole/Downloads/C++(Class)/BankSystem/build/BankSystem.sln
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Cole/GitHub/BanakSystem -BC:/Users/Cole/GitHub/BanakSystem/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Cole/GitHub/BanakSystem/build/BankSystem.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

@@ -1,6 +1,7 @@
 #include "FileSystem.h"
 
 #include <fstream>
+#include <cstdio>
 
 #include "HelperFuncs.h"
 
@@ -56,6 +57,14 @@ void FileSystem::CreateNewFile(std::string const& filePath)
 	file.close();
 }
 
+void FileSystem::DeleteFile(std::string const& filePath) 
+{
+	if (std::remove(filePath.c_str()) != 0) 
+	{
+		std::perror("Filed to delete file. Path: ");
+	}
+}
+
 void FileSystem::ClearFileData(std::string const& filePath)
 {
 	if (!FileExists(filePath)) { return; }
@@ -94,12 +103,13 @@ uint64_t FileSystem::GetFileSize(std::string const& filePath)
 	return static_cast<uint64_t>(pos);
 }
 
-void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, char& data, bool manuallyCloseFstream)
+void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, char data, bool manuallyCloseFstream)
 {
 	if (!file.is_open())
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::app | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in append mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -129,6 +139,7 @@ void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, 
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::app | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in append mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -152,12 +163,13 @@ void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, 
 	}
 }
 
-void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, bool& data, bool manuallyCloseFstream)
+void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, bool data, bool manuallyCloseFstream)
 {
 	if (!file.is_open())
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::app | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in append mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -179,12 +191,13 @@ void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, 
 	}
 }
 
-void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, uint64_t & data, bool manuallyCloseFstream)
+void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, uint64_t data, bool manuallyCloseFstream)
 {
 	if (!file.is_open())
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::app | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in append mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -204,12 +217,13 @@ void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, 
 	}
 }
 
-void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, double & data, bool manuallyCloseFstream)
+void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, double data, bool manuallyCloseFstream)
 {
 	if (!file.is_open())
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::app | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in append mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -229,7 +243,7 @@ void FileSystem::AddDataToFile(std::fstream& file, std::string const& filePath, 
 	}
 }
 
-char FileSystem::ReadCharFromFile(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream)
+char FileSystem::ReadCharFromFile(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream)
 {
 	//get file size
 	uint64_t fileSize = GetFileSize(filePath);
@@ -239,6 +253,7 @@ char FileSystem::ReadCharFromFile(std::fstream& file, std::string const& filePat
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::in | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in read mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -250,8 +265,8 @@ char FileSystem::ReadCharFromFile(std::fstream& file, std::string const& filePat
 	//move cursor to file offset
 	file.seekg(readOffset);
 
-	char placeholder;
-	int8_t dataFromInt8_t;
+	char placeholder = '\0';
+	int8_t dataFromInt8_t = 0;
 
 	//check if the file still has data
 	if (fileSize < readOffset) { HelperFuncs::LogLine("Read offset beyond file limits"); return 0; }
@@ -274,7 +289,7 @@ char FileSystem::ReadCharFromFile(std::fstream& file, std::string const& filePat
 	return placeholder;
 }
 
-std::string	FileSystem::ReadStringFromFile(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream)
+std::string	FileSystem::ReadStringFromFile(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream)
 {
 	//get file size
 	uint64_t fileSize = GetFileSize(filePath);
@@ -284,6 +299,7 @@ std::string	FileSystem::ReadStringFromFile(std::fstream& file, std::string const
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::in | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in read mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -308,6 +324,8 @@ std::string	FileSystem::ReadStringFromFile(std::fstream& file, std::string const
 	//write file data
 	file.read(reinterpret_cast<char*>(&stringLenght), sizeof(stringLenght));
 
+	if (stringLenght < 1) { return ""; }
+
 	std::string placeholder(stringLenght, '\0');
 
 	//check if the file still has data  //adding the size of uint64_t cause the readoffset is in the (old) locationt and thinks we're still reading the string lenght
@@ -328,7 +346,7 @@ std::string	FileSystem::ReadStringFromFile(std::fstream& file, std::string const
 	return placeholder;
 }
 
-bool FileSystem::ReadBoolFromFile(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream)
+bool FileSystem::ReadBoolFromFile(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream)
 {
 	//get file size
 	uint64_t fileSize = GetFileSize(filePath);
@@ -338,6 +356,7 @@ bool FileSystem::ReadBoolFromFile(std::fstream& file, std::string const& filePat
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::in | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in read mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -350,8 +369,8 @@ bool FileSystem::ReadBoolFromFile(std::fstream& file, std::string const& filePat
 	//move cursor to file offset
 	file.seekg(readOffset);
 
-	bool placeholder;
-	uint8_t dataFromUint8_t;
+	bool placeholder = false;
+	uint8_t dataFromUint8_t = 0;
 
 	//check if the file still has data
 	if (fileSize < readOffset) { HelperFuncs::LogLine("Read offset beyond file limits"); return false; }
@@ -374,7 +393,7 @@ bool FileSystem::ReadBoolFromFile(std::fstream& file, std::string const& filePat
 	return placeholder;
 }
 
-uint64_t FileSystem::ReadUint64_tFromFile(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream)
+uint64_t FileSystem::ReadUint64_tFromFile(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream)
 {
 	//get file size
 	uint64_t fileSize = GetFileSize(filePath);
@@ -384,6 +403,7 @@ uint64_t FileSystem::ReadUint64_tFromFile(std::fstream& file, std::string const&
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::in | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in read mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -395,7 +415,7 @@ uint64_t FileSystem::ReadUint64_tFromFile(std::fstream& file, std::string const&
 	//move cursor to file offset
 	file.seekg(readOffset);
 
-	uint64_t placeholder;
+	uint64_t placeholder = 0;
 
 	//check if the file still has data
 	if (fileSize < readOffset) { HelperFuncs::LogLine("Read offset beyond file limits"); return 0; }
@@ -416,7 +436,7 @@ uint64_t FileSystem::ReadUint64_tFromFile(std::fstream& file, std::string const&
 	return placeholder;
 }
 
-double FileSystem::ReadDoubleFromFile(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream)
+double FileSystem::ReadDoubleFromFile(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream)
 {
 	//get file size
 	uint64_t fileSize = GetFileSize(filePath);
@@ -426,6 +446,7 @@ double FileSystem::ReadDoubleFromFile(std::fstream& file, std::string const& fil
 	{
 		file.clear(); // reset any failbits
 		file.open(filePath, std::ios::in | std::ios::binary);
+		HelperFuncs::LogLine("File manually opened in read mode. Path: " + filePath);
 	}
 
 	if (!file.is_open())
@@ -437,7 +458,7 @@ double FileSystem::ReadDoubleFromFile(std::fstream& file, std::string const& fil
 	//move cursor to file offset
 	file.seekg(readOffset);
 
-	double placeholder;
+	double placeholder = 0;
 
 	//check if the file still has data
 	if (fileSize < readOffset) { HelperFuncs::LogLine("Read offset beyond file limits"); return 0; }

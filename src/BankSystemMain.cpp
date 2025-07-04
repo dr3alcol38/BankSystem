@@ -1,6 +1,3 @@
-//#include <iostream>
-#include <fstream>
-
 #include "HelperFuncs.h"
 #include "FileSystem.h"
 #include "UserProfile.h"
@@ -29,27 +26,27 @@ int main()
     //BankFile file(path);
     //if (!file.FileExists()) 
     //{ 
-    //    file.CreateFile(FileType::userProfileData);
+    //    file.CreateFile();
+
+    //    std::string k1 = "The first string";
+    //    std::string k2 = "The second string";
+
+    //    file.AddDataToFile(k1);
+    //    file.AddDataToFile(k2);
+
+    //    file.SaveFile();
+    //    file.CloseFile();
     //}
     //else
     //{
-    //    file.ClearFileData(FileType::userProfileData);
+    //    file.ClearFileData();
     //}
-
-    //std::string k1 = "The first string";
-    //std::string k2 = "The second string";
-
-    //file.AddDataToFile(k1);
-    //file.AddDataToFile(k2);
-    //file.AddDataToFile(k1);
-    //file.SaveFile();
 
     //HelperFuncs::LogLine(file.ReadStringFromFile());
     //HelperFuncs::LogLine(std::to_string(file.ReadUint64_tFromFile()));
     //HelperFuncs::LogLine(file.ReadStringFromFile());
     //HelperFuncs::LogLine(file.ReadStringFromFile());
     //HelperFuncs::LogLine(file.ReadStringFromFile());
-    //file.CloseFile();
 
     return 0;
 }

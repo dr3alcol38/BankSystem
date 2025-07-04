@@ -15,3 +15,5 @@ src/UserProfile.cpp
 src/RequestAndResponseManager.h
 src/RequestAndResponseManager.cpp
 )
+
+#target_include_directories(BankSystem PRIVATE "${PROJECT_SOURCE_DIR}/dependencies/include")

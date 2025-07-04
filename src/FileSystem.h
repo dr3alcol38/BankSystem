@@ -26,23 +26,25 @@ public:
 
 	static void CreateNewFile(std::string const& filePath);
 
+	static void DeleteFile(std::string const& filePath);
+
 	static void ClearFileData(std::string const& filePath);
 
 	static uint64_t GetFileSize(std::string const& filePath);
 
 	//writes
-	static void AddDataToFile(std::fstream& file, std::string const& filePath, char& data,			bool manuallyCloseFstream = true);
-	static void AddDataToFile(std::fstream& file, std::string const& filePath, std::string & data,	bool manuallyCloseFstream = true);
-	static void AddDataToFile(std::fstream& file, std::string const& filePath, bool& data,			bool manuallyCloseFstream = true);
-	static void AddDataToFile(std::fstream& file, std::string const& filePath, uint64_t & data,		bool manuallyCloseFstream = true);
-	static void AddDataToFile(std::fstream& file, std::string const& filePath, double & data,		bool manuallyCloseFstream = true);
+	static void			AddDataToFile		(std::fstream& file, std::string const& filePath, char			 data, bool manuallyCloseFstream = true);
+	static void			AddDataToFile		(std::fstream& file, std::string const& filePath, std::string&   data, bool manuallyCloseFstream = true);
+	static void			AddDataToFile		(std::fstream& file, std::string const& filePath, bool			 data, bool manuallyCloseFstream = true);
+	static void			AddDataToFile		(std::fstream& file, std::string const& filePath, uint64_t		 data, bool manuallyCloseFstream = true);
+	static void			AddDataToFile		(std::fstream& file, std::string const& filePath, double		 data, bool manuallyCloseFstream = true);
 
 	//reads
-	static char			ReadCharFromFile	(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream = true);
-	static std::string	ReadStringFromFile	(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream = true);
-	static bool			ReadBoolFromFile	(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream = true);
-	static uint64_t		ReadUint64_tFromFile(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream = true);
-	static double		ReadDoubleFromFile	(std::fstream& file, std::string const& filePath, uint64_t const& readOffset, bool manuallyCloseFstream = true);
+	static char			ReadCharFromFile	(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream = true);
+	static std::string	ReadStringFromFile	(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream = true);
+	static bool			ReadBoolFromFile	(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream = true);
+	static uint64_t		ReadUint64_tFromFile(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream = true);
+	static double		ReadDoubleFromFile	(std::fstream& file, std::string const& filePath, uint64_t readOffset, bool manuallyCloseFstream = true);
 
 	static std::string GetExeFolder();
 };
@@ -59,6 +61,7 @@ private:
 	uint64_t _readOffset = 0;
 	std::vector<std::function<void()>> _functionBuffer;
 
+	#pragma region //Write to file functions
 	void WriteDataToFile(char& data)
 	{
 		if (!FileExists()) { return; }
@@ -93,56 +96,63 @@ private:
 
 		FileSystem::AddDataToFile(_file, GetFilePath(), data, false);
 	}
+	#pragma endregion
 
+	#pragma region //Function buffer
 	void AddToFunctionBuffer(char& data)
 	{
 		// = allows the lambda to keep it's version of data
-		//mutable removes the constness of the lambda
-		_functionBuffer.emplace_back([=]() mutable { char copy = data; WriteDataToFile(copy); });
+		_functionBuffer.emplace_back([=]() { char copy = data; WriteDataToFile(copy); });
 	}
 
 	void AddToFunctionBuffer(std::string& data)
 	{
 		// = allows the lambda to keep it's version of data
-		//mutable removes the constness of the lambda
-		_functionBuffer.emplace_back([=]() mutable { std::string copy = data; WriteDataToFile(copy); });
+		_functionBuffer.emplace_back([=]() { std::string copy = data; WriteDataToFile(copy); });
 	}
 
 	void AddToFunctionBuffer(bool& data)
 	{
 		// = allows the lambda to keep it's version of data
-		//mutable removes the constness of the lambda
-		_functionBuffer.emplace_back([=]() mutable { bool copy = data; WriteDataToFile(copy); });
+		_functionBuffer.emplace_back([=]() { bool copy = data; WriteDataToFile(copy); });
 	}
 
 	void AddToFunctionBuffer(uint64_t& data)
 	{
 		// = allows the lambda to keep it's version of data
-		//mutable removes the constness of the lambda
-		_functionBuffer.emplace_back([=]() mutable { uint64_t copy = data; WriteDataToFile(copy); });
+		_functionBuffer.emplace_back([=]() { uint64_t copy = data; WriteDataToFile(copy); });
 	}
 
 	void AddToFunctionBuffer(double& data)
 	{
 		// = allows the lambda to keep it's version of data
-		//mutable removes the constness of the lambda
-		_functionBuffer.emplace_back([=]() mutable { double copy = data; WriteDataToFile(copy); });
+		_functionBuffer.emplace_back([=]() { double copy = data; WriteDataToFile(copy); });
 	}
 
 	void ClearFunctionBuffer()
 	{
+		if (_functionBuffer.size() > 0)
+		{
+			for (std::function<void()>& func : _functionBuffer)
+			{
+				func = []() {};
+			}
+		}
+
 		_functionBuffer.clear();
 	}
 
 	void FlushFunctionBuffer()
 	{
-		for (std::function<void()> func : _functionBuffer)
+		if (_functionBuffer.size() > 0) 
 		{
-			func();
+			for (std::function<void()> & func : _functionBuffer)
+			{
+				func();
+			}
 		}
-
-		CloseFile();
 	}
+	#pragma endregion
 
 public:
 	std::string _dataTypesList;
@@ -156,11 +166,11 @@ public:
 	BankFile(BankFile const&) = delete;
 
 	//Move constructor
-	BankFile(BankFile const&&) = delete;
+	BankFile(BankFile &&) = delete;
 
 	~BankFile()
 	{
-		SaveFile();
+		if (_file.is_open()) { CloseFile(); }
 	}
 
 	bool FileExists() 
@@ -168,7 +178,7 @@ public:
 		return FileSystem::FileExists(GetFilePath());
 	}
 
-	std::string const GetFilePath() const
+	std::string const& GetFilePath() const
 	{
 		return _filePath;
 	}
@@ -187,8 +197,11 @@ public:
 		if (!FileExists()) { return; }
 
 		FileSystem::ClearFileData(GetFilePath());
+		
+		//FlushFunctionBuffer();
+		ClearFunctionBuffer();
 
-		FileSystem::CreateNewFile(GetFilePath());
+		CloseFile();
 	}
 
 	uint64_t GetFileSize()
@@ -206,6 +219,26 @@ public:
 		_readOffset = 0;
 	}
 
+	void SaveFile()
+	{
+		FlushFunctionBuffer();
+
+		ClearFunctionBuffer();
+
+		CloseFile();
+	}
+
+	void CloseFile()
+	{
+		if (!FileExists()) { return; }
+
+		_file.close();
+		_file.clear();
+
+		ClearFunctionBuffer();
+	}
+
+	#pragma region //Add data to file functions
 	void AddDataToFile(char& data)
 	{
 		AddToFunctionBuffer(data);
@@ -230,20 +263,9 @@ public:
 	{
 		AddToFunctionBuffer(data);
 	}
+	#pragma endregion
 
-	void SaveFile() 
-	{
-		FlushFunctionBuffer();
-	}
-
-	void CloseFile() 
-	{
-		if (!FileExists()) { return; }
-
-		_file.close();
-		_file.clear();
-	}
-
+	#pragma region //Read from file functions
 	char ReadCharFromFile()
 	{
 		if (!FileExists()) { return 0; }
@@ -299,4 +321,5 @@ public:
 
 		return FileSystem::ReadDoubleFromFile(_file, GetFilePath(), placeHolder, false);
 	}
+	#pragma endregion
 };

@@ -1,45 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\HelperFuncs.cpp">
+    <ClCompile Include="C:\Users\Cole\GitHub\BanakSystem\src\HelperFuncs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\FileSystem.cpp">
+    <ClCompile Include="C:\Users\Cole\GitHub\BanakSystem\src\FileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\BankSystemMain.cpp">
+    <ClCompile Include="C:\Users\Cole\GitHub\BanakSystem\src\BankSystemMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\BankAccount.cpp">
+    <ClCompile Include="C:\Users\Cole\GitHub\BanakSystem\src\BankAccount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\UserProfile.cpp">
+    <ClCompile Include="C:\Users\Cole\GitHub\BanakSystem\src\UserProfile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Cole\GitHub\BanakSystem\src\RequestAndResponseManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\HelperFuncs.h">
+    <ClInclude Include="C:\Users\Cole\GitHub\BanakSystem\src\HelperFuncs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\FileSystem.h">
+    <ClInclude Include="C:\Users\Cole\GitHub\BanakSystem\src\FileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\BankAccount.h">
+    <ClInclude Include="C:\Users\Cole\GitHub\BanakSystem\src\BankAccount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\src\UserProfile.h">
+    <ClInclude Include="C:\Users\Cole\GitHub\BanakSystem\src\UserProfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Cole\GitHub\BanakSystem\src\RequestAndResponseManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Cole\Downloads\C++(Class)\BankSystem\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\Cole\GitHub\BanakSystem\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{7360E190-F78E-3FFC-9A8D-8B7232A7C1F4}</UniqueIdentifier>
+      <UniqueIdentifier>{BAAC2A12-9D03-384D-9E8F-2B10844EF2B1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{192ABCD2-C689-3611-9AE9-D9C67B05A9F8}</UniqueIdentifier>
+      <UniqueIdentifier>{F2471D64-3280-31A0-987D-F44A565D4CA2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

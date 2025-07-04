@@ -1,8 +1,9 @@
-﻿  Building Custom Rule C:/Users/Cole/Downloads/C++(Class)/BankSystem/CMakeLists.txt
+﻿  Building Custom Rule C:/Users/Cole/GitHub/BanakSystem/CMakeLists.txt
   HelperFuncs.cpp
   FileSystem.cpp
   BankSystemMain.cpp
   BankAccount.cpp
   UserProfile.cpp
+  RequestAndResponseManager.cpp
   Generating Code...
-  BankSystem.vcxproj -> C:\Users\Cole\Downloads\C++(Class)\BankSystem\build\Release\BankSystem.exe
+  BankSystem.vcxproj -> C:\Users\Cole\GitHub\BanakSystem\build\Release\BankSystem.exe

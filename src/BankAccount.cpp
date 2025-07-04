@@ -1,6 +1,5 @@
 #include "BankAccount.h"
 
-#include <fstream>
 #include <string>
 #include <sstream>
 
@@ -101,20 +100,30 @@ void BankAccount::SaveBankAccountData()
 	uint64_t fileVersion = 0;
 
 	BankFile file(_filePath);
+
 	if (!file.FileExists()) { file.CreateFile(); }
+	else if (file.FileExists() && file.GetFileSize() < 1)
+	{
+		std::string fileType = FileSystem::FileTypeToString(FileType::bankAccountData);
+		uint64_t fileVersion = 0;
+	}
 	else
 	{
 		//read the previous file type and data
 		fileType = file.ReadStringFromFile();
 		fileType = fileType == "" ? FileSystem::FileTypeToString(FileType::bankAccountData) : fileType;
-		fileVersion = file.ReadUint64_tFromFile();
-	}
 
-	if (fileType != FileSystem::FileTypeToString(FileType::bankAccountData)) 
-	{
-		HelperFuncs::Log("File Mismatch: ");
-		HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::bankAccountData));
-		return; 
+		if (fileType != FileSystem::FileTypeToString(FileType::bankAccountData))
+		{
+			HelperFuncs::Log("File Mismatch: ");
+			HelperFuncs::LogLine(fileType + " is not accepted for " + FileSystem::FileTypeToString(FileType::bankAccountData));
+			return;
+		}
+
+		fileVersion = file.ReadUint64_tFromFile();
+
+		//clear the old data
+		file.ClearFileData();
 	}
 
 	switch (fileVersion)
@@ -124,9 +133,6 @@ void BankAccount::SaveBankAccountData()
 			break;
 
 		case 0:
-			//clear the old data
-			file.ClearFileData();
-
 			//add the file type and version
 			file.AddDataToFile(fileType);
 			file.AddDataToFile(fileVersion);
@@ -182,6 +188,8 @@ void BankAccount::LoadBankAccountData()
 		LoadBankAccountData_Version_0(file);
 		break;
 	}
+
+	file.CloseFile();
 
 	HelperFuncs::LogLine("Loading complete");
 }
